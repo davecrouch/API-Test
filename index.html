@@ -1,0 +1,80 @@
+<html>
+<head><title>API Test Page</title></head>
+<body>
+<P><B><font size=+2>This is a test page for displaying API content.</font></b></p>
+<BR><BR><BR>
+<script>
+
+/*  Prompt: 
+ Give me some Javascript code that I can drop into a Google site that will parse the following API response and render it as a nice table:  {"meta":{"code":200,"disclaimer":"Usage subject to terms: https:\/\/currencybeacon.com\/terms"},"response":{"date":"2024-07-30T00:39:25Z","base":"USD","rates":{"GBP":0.77799069,"EUR":0.92449271}},"date":"2024-07-30T00:39:25Z","base":"USD","rates":{"GBP":0.77799069,"EUR":0.92449271}} 
+*/
+
+
+// JavaScript
+function renderExchangeRates(data) {
+  // Get the container element where the table will be displayed
+  const container = document.getElementById("exchange-rates");
+
+  if (!container) {
+    console.error("Element with ID 'exchange-rates' not found!");
+    return;
+  }
+
+  // Create the table element
+  const table = document.createElement("table");
+
+  // Create table header row
+  const headerRow = document.createElement("tr");   
+
+  const headerBase = document.createElement("th");
+  headerBase.textContent = "Currency";
+  const headerRate = document.createElement("th");
+  headerRate.textContent = "Rate (vs. USD)";
+  headerRow.appendChild(headerBase);
+  headerRow.appendChild(headerRate);
+  table.appendChild(headerRow);
+
+  // Loop through the exchange rates and create rows
+  const rates = data.response.rates;
+  for (const currency in rates) {
+    const row = document.createElement("tr");
+    const cellCurrency = document.createElement("td");
+    cellCurrency.textContent = currency;
+    const cellRate = document.createElement("td");
+    cellRate.textContent = rates[currency].toFixed(4); // Format rate with 4 decimals
+    row.appendChild(cellCurrency);
+    row.appendChild(cellRate);
+    table.appendChild(row);
+  }
+
+  // Clear any existing content in the container
+  container.innerHTML = "";
+
+  // Append the table to the container element
+  container.appendChild(table);
+}
+
+// Assuming you have an API endpoint that returns the exchange rate data
+fetch("your-api-endpoint")
+  .then(response => response.json())
+  .then(data => renderExchangeRates(data))
+  .catch(error => console.error("Error fetching exchange rates:", error));
+
+/*
+Explanation:
+1.	This code defines a function renderExchangeRates that takes the API response data as an argument.
+2.	It first tries to find an element with the ID "exchange-rates" where the table will be displayed. If not found, it logs an error message.
+3.	It creates a table element and a header row with "Currency" and "Rate (vs. USD)" columns.
+4.	It iterates through the rates object in the response data and creates table rows for each currency and its exchange rate. The rate is formatted to display 4 decimal places.
+5.	It clears any existing content in the container element.
+6.	Finally, it appends the table to the container element.
+How to use:
+•	Replace "your-api-endpoint" with the actual URL of your API endpoint that returns the exchange rate data.
+•	In your Google Site, create a new HTML element and paste the Javascript code there.
+•	Make sure the HTML element has a container element with the ID "exchange-rates". You can use a <div> element with the desired ID.
+This code will fetch the exchange rate data from your API, parse it, and render it as a nice table in your Google Site.
+*/
+
+</script>
+</body>
+</html>
